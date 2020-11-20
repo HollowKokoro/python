@@ -1,17 +1,33 @@
-a = 'type'
-b = 'brand'
-c = 'amount'
-d = 'manufacturer'
-e = 'price'
-f = 'size'
-database = []
+import mariadb
+import sys
+# Connect to MariaDB Platform
+try:
+    conn = mariadb.connect(
+        user="root",
+        password="1234",
+        host="localhost",
+        port=3306,
+        database="test"
+    )
+except mariadb.Error as e:
+    print(f"Error connecting to MariaDB Platform: {e}")
+    sys.exit(1)
+# Get Cursor
+cur = conn.cursor()
 
+keys = ['type', 'brand', 'amount', 'manufacturer', 'price', 'size']
+columns = dict.fromkeys(keys, None)
+try:
+    cur.execute('CREATE TABLE test')
+except mariadb.Error as e:
+    print(f"Не создал таблицу {e}")
 
-def addToBase(db, tpe, brand, amount, manufacturer, price, size):
-    good = {a: tpe, b: brand, c: amount, d: manufacturer, e: price, f: size}
-    db.append(good)
+try:
+    for value in keys:
+        
 
 while 1:
+    newData = columns
     print('Введите тип товара:')
     tpe = input()
     print('Введите бренд товара:')
