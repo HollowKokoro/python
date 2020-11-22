@@ -40,5 +40,3 @@ while 1:
     price = input()
     print('Введите размер:')
     size = input()
-    addToBase(database, tpe, brand, amount, manufacturer, price, size)
-    print(database)
