@@ -1,7 +1,6 @@
 import mariadb
 import sys
 
-
 class Product:
     # Connect to MariaDB Platform
     try:
@@ -18,8 +17,6 @@ class Product:
     # Get Cursor
     cur = conn.cursor()
 
-    keys = ['price', 'name', 'quantity', 'brand']
-
     try:
         cur.execute('USE test IF EXISTS;')
     except mariadb.Error as e:
@@ -34,7 +31,26 @@ class Product:
                     'brand VARCHAR(255)'
                     ');')
     except mariadb.Error as e:
-        print(f'Не создал таблицу{e}')
+        print(f'Не создал таблицу {e}')
+
+    def addToBase(table, data, cur):
+        try:
+            cur.execute(f'INSERT INTO {table} VALUES ({data});')
+        except mariadb.Error as e:
+            print(f'INSERT не удался{e}')
+
+    def showStats(targetColumn, table, cur):
+        try:
+            cur.execute(f'SELECT {targetColumn}, COUNT({targetColumn}) '
+                        f'FROM {table} GROUP BY {targetColumn} HAVING COUNT({targetColumn}) > 1;')
+        except mariadb.Error as e:
+            print(f'Не удалось выести статистику по производителю {e}')
+
+    def getData(column, table, cur):
+        try:
+            print(cur.execute(f'SELECT {column} FROM {table}'))
+        except mariadb.Error as e:
+            print(f'Не удалось вернуть результат запроса {e}')
 
     while 1:
         newData = []
@@ -46,13 +62,6 @@ class Product:
         newData.append(int(input()))
         print('Введите бренд товара')
         newData.append(input())
-        try:
-            cur.execute('INSERT INTO product VALUES (newData);')
-        except mariadb.Error as e:
-            print(f'INSERT не удался{e}')
-
-        try:
-            cur.execute('SELECT manufacturer, COUNT(manufacturer) '
-                        'FROM product GROUP BY manufacturer HAVING COUNT(manufacturer) > 1;')
-        except mariadb.Error as e:
-            print(f'Не удалось выести статистику по производителю')
+        addToBase('product', newData, cur)
+        showStats('manufacturer', 'product', cur)
+        getData('price', 245, cur)
