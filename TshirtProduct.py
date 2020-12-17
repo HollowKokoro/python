@@ -69,6 +69,6 @@ class TshirtProduct:
         print('Введите размер:')
         newData.append(int(input()))
         print('Введите цвет:')
-        addToBase('product', newData, cur)
-        showStats('manufacturer', 'product', cur)
+        addToBase('tshirt', newData, cur)
+        showStats('manufacturer', 'tshirt', cur)
         getData('price', 245, cur)
